@@ -7,8 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import net.bytebuddy.dynamic.loading.ClassReloadingStrategy.Strategy;
-
 @Entity
 public class Categoria implements Serializable {
 	
