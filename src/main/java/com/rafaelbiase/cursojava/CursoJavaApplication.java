@@ -13,6 +13,7 @@ import com.rafaelbiase.cursojava.domain.Cidade;
 import com.rafaelbiase.cursojava.domain.Cliente;
 import com.rafaelbiase.cursojava.domain.Endereco;
 import com.rafaelbiase.cursojava.domain.Estado;
+import com.rafaelbiase.cursojava.domain.ItemPedido;
 import com.rafaelbiase.cursojava.domain.Pagamento;
 import com.rafaelbiase.cursojava.domain.PagamentoComCartão;
 import com.rafaelbiase.cursojava.domain.PagamentoComboleto;
@@ -25,6 +26,7 @@ import com.rafaelbiase.cursojava.repositories.CidadeRepository;
 import com.rafaelbiase.cursojava.repositories.ClienteRepository;
 import com.rafaelbiase.cursojava.repositories.EnderecoRepository;
 import com.rafaelbiase.cursojava.repositories.EstadoRepository;
+import com.rafaelbiase.cursojava.repositories.ItemPedidoRepository;
 import com.rafaelbiase.cursojava.repositories.PagamentoRepository;
 import com.rafaelbiase.cursojava.repositories.PedidoRepository;
 import com.rafaelbiase.cursojava.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class CursoJavaApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursoJavaApplication.class, args);
@@ -101,17 +105,31 @@ public class CursoJavaApplication implements CommandLineRunner {
 		
 		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));		
 		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2.000);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
 		
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
-		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3)); 
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }
