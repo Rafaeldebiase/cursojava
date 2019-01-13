@@ -1,5 +1,6 @@
 package com.rafaelbiase.cursojava;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.rafaelbiase.cursojava.domain.Cidade;
 import com.rafaelbiase.cursojava.domain.Cliente;
 import com.rafaelbiase.cursojava.domain.Endereco;
 import com.rafaelbiase.cursojava.domain.Estado;
+import com.rafaelbiase.cursojava.domain.Pagamento;
+import com.rafaelbiase.cursojava.domain.PagamentoComCartão;
+import com.rafaelbiase.cursojava.domain.PagamentoComboleto;
+import com.rafaelbiase.cursojava.domain.Pedido;
 import com.rafaelbiase.cursojava.domain.Produto;
+import com.rafaelbiase.cursojava.domain.enums.EstadoPagamento;
 import com.rafaelbiase.cursojava.domain.enums.TipoCliente;
 import com.rafaelbiase.cursojava.repositories.CategoriaRepository;
 import com.rafaelbiase.cursojava.repositories.CidadeRepository;
 import com.rafaelbiase.cursojava.repositories.ClienteRepository;
 import com.rafaelbiase.cursojava.repositories.EnderecoRepository;
 import com.rafaelbiase.cursojava.repositories.EstadoRepository;
+import com.rafaelbiase.cursojava.repositories.PagamentoRepository;
+import com.rafaelbiase.cursojava.repositories.PedidoRepository;
 import com.rafaelbiase.cursojava.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -36,6 +44,10 @@ public class CursoJavaApplication implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursoJavaApplication.class, args);
@@ -76,6 +88,18 @@ public class CursoJavaApplication implements CommandLineRunner {
 		
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null,sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null,sdf.parse("10/10/2017 10:32"), cli1, e2);
+		
+		Pagamento pagto1 = new PagamentoComCartão(null, EstadoPagamento.QUITADO, ped1 , 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComboleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 23:00"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));		
 		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
@@ -85,6 +109,9 @@ public class CursoJavaApplication implements CommandLineRunner {
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 	}
 
 }
